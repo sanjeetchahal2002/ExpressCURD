@@ -1,13 +1,10 @@
+const env = require('dotenv').config()
 module.exports={
-    HOST : 'localhost',
-    USER : 'postgres',
-    PASSWORD : '2002',
-    DB : 'api_db',
+    HOST : process.env.db_HOST,
+    USER :  process.env.db_USER ,
+    PASSWORD :  process.env.db_PASSWORD,
+    DB :  process.env.DB,
     dialect:'postgres',
-    pool:{
-        max:5,
-        min:0,
-        acquire:30000,
-        idle:10000
-    }
 }
+
+console.log(env)

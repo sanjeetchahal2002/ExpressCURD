@@ -1,29 +1,20 @@
+require('dotenv')
 const express = require('express')
-const cors = require('cors')
-
 const app = express()
 
-var corOptions = {
-    origin:'http://localhost:8081'
-}
-
-
-
-app.use(cors(corOptions))
-
+const errorHandler = require('./Middlewares/errorHandler.js')
+const router = require('./routes/TodoRouter.js')
 
 app.use(express.json())
-
-app.use(express.urlencoded({extended : true}))
-
-const router = require('./routes/TodoRouter.js')
-app.use('',router)
+app.use('/todos',router)
+app.use(errorHandler.errorLoggers)
+app.use(errorHandler.errorResponder)
+app.use(errorHandler.invalidPathHandler)
 
 app.get('/',(req,res)=>{
     res.json({message:'This is Todo List'})
 })
-
-const PORT = process.env.PORT || 8080;
+const PORT = 8080;
 
 app.listen(PORT, () => {
   console.log(`server is running on ${PORT}`);

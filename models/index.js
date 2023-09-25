@@ -8,13 +8,6 @@ const sequelize = new Sequelize(
         host:dbConfig.HOST,
         dialect:dbConfig.dialect,
         operatorsAliases:false,
-
-        pool:{
-            max:dbConfig.pool.MAX,
-            min:dbConfig.pool.MIN,
-            acquire:dbConfig.pool.ACQUIRE,
-            idle:dbConfig.pool.IDLE
-        }
     }
 )
 sequelize.authenticate()

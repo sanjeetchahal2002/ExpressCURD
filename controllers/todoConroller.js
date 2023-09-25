@@ -6,11 +6,24 @@ const getAllTodos = async (req,res) => {
     res.status(200).send(todos)
 }
 
-const getTodoByid = async (req,res) => {
+const getTodoByid = async (req,res,next) => {
     let id = req.params.id
-    let todo = await Todo.findOne({where: {id : id}})
-    res.status(200).send(todo)
+    try{
+        if(id != NaN){
+        let todo = await Todo.findOne({where: {id : id}})
+        if(todo){
+            res.status(200).send(todo)
+        }else{
+            throw new Error('Todo Not Exist')
+        }
+    }else{
+        throw new Error('Id is not a Number')
+    }
+    }catch(error){
+        next(error)
+    }
 }
+
 const addtodo = async (req,res) => {
     let info = {
         text : req.body.text,
@@ -20,17 +33,37 @@ const addtodo = async (req,res) => {
     res.status(200).send(info)
 }
 
-
-const updateTodoId = async (req,res) => {
+const updateTodoId = async (req,res,next) => {
     let id  = req.params.id
-    const todo = await Todo.update(req.body,{where: {id : id}})
-    res.status(200).send(todo)
+    try{
+        if(id != NaN){
+            const todo = await Todo.update(req.body,{where: {id : id}})
+            if(todo){
+                res.status(200).send(todo)
+            }else{
+                throw new Error ('Todo Not Exist')
+            }
+        }else{
+            throw new Error ('Id is not a Number')
+        }
+    }catch(error){
+        next(error)
+    }
 }
 
-const deleteTodoId = async (req,res) => {
+const deleteTodoId = async (req,res,next) => {
     let id  = req.params.id
-    await Todo.destroy({where: {id : id}})
-    res.status(200).send('Todo is deleted')
+    try{
+        const item = await Todo.findOne({where:{id:id}})
+        if(item){
+            await Todo.destroy({where: {id : id}})
+            res.status(200).send('Todo is deleted')
+        }else{
+            throw new Error('Id does not exist!')
+        }
+    }catch(error){
+        next(error)
+    }
 }
 
 module.exports = {
@@ -40,7 +73,6 @@ module.exports = {
     updateTodoId,
     deleteTodoId
 }
-
 
 
 
